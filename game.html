@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Math Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+        }
+        .card {
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #ffecf2;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            color: #ec4899;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            color: #ec4899;
+        }
+        .lives {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .question {
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+            color: #ec4899;
+            margin-bottom: 20px;
+        }
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .button {
+            padding: 15px;
+            background: #ec4899;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        .button:hover {
+            background: #d61f69;
+        }
+        .game-over {
+            text-align: center;
+        }
+        .heart {
+            color: #ec4899;
+            font-size: 24px;
+            margin: 0 2px;
+        }
+    </style>
+</head>
+<body>
+    <div id="game" class="card"></div>
+    <script>
+        let score = 0;
+        let level = 1;
+        let lives = 6;
+        let timeLeft = 10;
+        let timer;
+        let correctAnswers = 0;
+        let gameOver = false;
+        let wrongQuestions = [];
+
+        function generateQuestion() {
+            console.log("Generating new question");
+            
+            const types = ['multiply', 'square', 'divide', 'sqrt', 'add', 'subtract'];
+            const type = types[Math.floor(Math.random() * types.length)];
+            const maxNumber = Math.min(13, level + 2);
+            const multiplyBy10 = Math.random() < 0.3;
+
+            let num1, num2, correctAnswer;
+            
+            switch(type) {
+                case 'multiply':
+                    num1 = Math.floor(Math.random() * maxNumber) + 1;
+                    num2 = Math.floor(Math.random() * maxNumber) + 1;
+                    if (multiplyBy10) {
+                        num1 *= 10;
+                        num2 *= 10;
+                    }
+                    correctAnswer = num1 * num2;
+                    break;
+                case 'add':
+                    num1 = Math.floor(Math.random() * maxNumber) + 1;
+                    num2 = Math.floor(Math.random() * maxNumber) + 1;
+                    if (multiplyBy10) {
+                        num1 *= 10;
+                        num2 *= 10;
+                    }
+                    correctAnswer = num1 + num2;
+                    break;
+                case 'subtract':
+                    num2 = Math.floor(Math.random() * maxNumber) + 1;
+                    correctAnswer = Math.floor(Math.random() * maxNumber) + 1;
+                    if (multiplyBy10) {
+                        num2 *= 10;
+                        correctAnswer *= 10;
+                    }
+                    num1 = correctAnswer + num2;
+                    break;
+                case 'square':
+                    num1 = Math.floor(Math.random() * 10) + 1;
+                    if (multiplyBy10) {
+                        num1 *= 10;
+                    }
+                    num2 = 2;
+                    correctAnswer = num1 * num1;
+                    break;
+                case 'divide':
+                    num2 = Math.floor(Math.random() * (maxNumber - 1)) + 2;
+                    correctAnswer = Math.floor(Math.random() * maxNumber) + 1;
+                    if (multiplyBy10) {
+                        correctAnswer *= 10;
+                    }
+                    num1 = correctAnswer * num2;
+                    break;
+                case 'sqrt':
+                    correctAnswer = Math.floor(Math.random() * 8) + 2;
+                    num1 = correctAnswer * correctAnswer;
+                    num2 = null;
+                    break;
+            }
+
+            console.log("Question details:", { type, num1, num2, correctAnswer, multiplyBy10 });
+
+            // Generate wrong answers
+            const scale = correctAnswer > 50 ? 10 : 3;
+            const generateWrongAnswer = () => {
+                let wrongAnswer;
+                do {
+                    const adjustment = (Math.floor(Math.random() * 6) - 3) * scale;
+                    wrongAnswer = correctAnswer + adjustment;
+                    wrongAnswer = Math.max(1, wrongAnswer);
+                } while (wrongAnswer === correctAnswer);
+                return wrongAnswer;
+            };
+
+            const wrongAnswers = [
+                generateWrongAnswer(),
+                generateWrongAnswer(),
+                generateWrongAnswer()
+            ];
+
+            const allOptions = [correctAnswer, ...wrongAnswers];
+            while (new Set(allOptions).size < 4) {
+                allOptions.push(generateWrongAnswer());
+            }
+
+            const options = Array.from(new Set(allOptions))
+                .slice(0, 4)
+                .sort(() => Math.random() - 0.5);
+
+            console.log("Generated options:", options);
+
+            return {
+                num1,
+                num2,
+                type,
+                correctAnswer,
+                options
+            };
+        }
+
+        function formatQuestion(num1, num2, type) {
+            switch(type) {
+                case 'multiply': return `${num1} × ${num2}`;
+                case 'square': return `${num1}²`;
+                case 'divide': return `${num1} ÷ ${num2}`;
+                case 'sqrt': return `√${num1}`;
+                case 'add': return `${num1} + ${num2}`;
+                case 'subtract': return `${num1} - ${num2}`;
+                default: return '';
+            }
+        }
+
+        function handleAnswer(selectedAnswer, correctAnswer) {
+            console.log("Answer selected:", selectedAnswer, "Correct:", correctAnswer);
+            
+            if (selectedAnswer === correctAnswer) {
+                score++;
+                correctAnswers++;
+                if (correctAnswers >= 10) {
+                    lives = Math.min(lives + 1, 6);
+                    correctAnswers = 0;
+                }
+                if (score >= level * 5) {
+                    level = Math.min(level + 1, 10);
+                }
+            } else {
+                lives--;
+                correctAnswers = 0;
+                if (lives === 0) {
+                    gameOver = true;
+                }
+            }
+            
+            clearInterval(timer);
+            renderGame();
+        }
+
+        function startTimer() {
+            timeLeft = 10;
+            clearInterval(timer);
+            timer = setInterval(() => {
+                timeLeft--;
+                if (timeLeft <= 0) {
+                    lives--;
+                    correctAnswers = 0;
+                    if (lives === 0) {
+                        gameOver = true;
+                    }
+                    clearInterval(timer);
+                    renderGame();
+                }
+                document.getElementById('timer').textContent = timeLeft;
+            }, 1000);
+        }
+
+        function renderGame() {
+            const gameDiv = document.getElementById('game');
+            const currentQuestion = generateQuestion();
+            
+            if (gameOver) {
+                gameDiv.innerHTML = `
+                    <div class="game-over">
+                        <h2>Game Over!</h2>
+                        <p>Final Score: ${score}</p>
+                        <p>Level Reached: ${level}</p>
+                        <button class="button" onclick="restartGame()">Play Again</button>
+                    </div>
+                `;
+                return;
+            }
+
+            gameDiv.innerHTML = `
+                <div class="header">Alice's Math Adventure v3 [+,-,×,²,÷,√]</div>
+                <div class="stats">
+                    <span>Level: ${level}</span>
+                    <span>Score: ${score}</span>
+                    <span>Time: <span id="timer">${timeLeft}</span>s</span>
+                </div>
+                <div class="lives">
+                    ${Array(6).fill().map((_, i) => `
+                        <span class="heart">${i < lives ? '❤️' : '🖤'}</span>
+                    `).join('')}
+                </div>
+                <div class="question">
+                    ${formatQuestion(currentQuestion.num1, currentQuestion.num2, currentQuestion.type)} = ?
+                </div>
+                <div class="options">
+                    ${currentQuestion.options.map(option => `
+                        <button class="button" onclick="handleAnswer(${option}, ${currentQuestion.correctAnswer})">
+                            ${option}
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+
+            startTimer();
+        }
+
+        function restartGame() {
+            score = 0;
+            level = 1;
+            lives = 6;
+            timeLeft = 10;
+            correctAnswers = 0;
+            gameOver = false;
+            wrongQuestions = [];
+            renderGame();
+        }
+
+        // Start the game
+        renderGame();
+    </script>
+</body>
+</html>
