@@ -69,22 +69,53 @@
 <body>
     <div id="game" class="card"></div>
     <script>
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const playerName = urlParams.get('name') || 'Player';
+        const difficulty = urlParams.get('difficulty') || 'advanced';
+
+        // Game configuration based on difficulty
+        const gameConfig = {
+            beginner: {
+                types: ['add', 'subtract'],
+                maxNumber: 10,
+                multiplyBy10Chance: 0,
+                maxLevel: 5,
+                timeLimit: 15,
+                operations: '[+,-]'
+            },
+            intermediate: {
+                types: ['add', 'subtract', 'multiply'],
+                maxNumber: 12,
+                multiplyBy10Chance: 0.2,
+                maxLevel: 8,
+                timeLimit: 12,
+                operations: '[+,-,×]'
+            },
+            advanced: {
+                types: ['multiply', 'square', 'divide', 'sqrt', 'add', 'subtract'],
+                maxNumber: 13,
+                multiplyBy10Chance: 0.3,
+                maxLevel: 10,
+                timeLimit: 10,
+                operations: '[+,-,×,²,÷,√]'
+            }
+        };
+
         let score = 0;
         let level = 1;
         let lives = 6;
-        let timeLeft = 10;
+        let timeLeft = gameConfig[difficulty].timeLimit;
         let timer;
         let correctAnswers = 0;
         let gameOver = false;
         let wrongQuestions = [];
 
         function generateQuestion() {
-            console.log("Generating new question");
-            
-            const types = ['multiply', 'square', 'divide', 'sqrt', 'add', 'subtract'];
-            const type = types[Math.floor(Math.random() * types.length)];
-            const maxNumber = Math.min(13, level + 2);
-            const multiplyBy10 = Math.random() < 0.3;
+            const config = gameConfig[difficulty];
+            const type = config.types[Math.floor(Math.random() * config.types.length)];
+            const maxNumber = Math.min(config.maxNumber, level + 2);
+            const multiplyBy10 = Math.random() < config.multiplyBy10Chance;
 
             let num1, num2, correctAnswer;
             
@@ -117,7 +148,7 @@
                     num1 = correctAnswer + num2;
                     break;
                 case 'square':
-                    num1 = Math.floor(Math.random() * 10) + 1;
+                    num1 = Math.floor(Math.random() * (maxNumber/2)) + 1;
                     if (multiplyBy10) {
                         num1 *= 10;
                     }
@@ -133,13 +164,11 @@
                     num1 = correctAnswer * num2;
                     break;
                 case 'sqrt':
-                    correctAnswer = Math.floor(Math.random() * 8) + 2;
+                    correctAnswer = Math.floor(Math.random() * 6) + 2;
                     num1 = correctAnswer * correctAnswer;
                     num2 = null;
                     break;
             }
-
-            console.log("Question details:", { type, num1, num2, correctAnswer, multiplyBy10 });
 
             // Generate wrong answers
             const scale = correctAnswer > 50 ? 10 : 3;
@@ -168,8 +197,6 @@
                 .slice(0, 4)
                 .sort(() => Math.random() - 0.5);
 
-            console.log("Generated options:", options);
-
             return {
                 num1,
                 num2,
@@ -192,8 +219,6 @@
         }
 
         function handleAnswer(selectedAnswer, correctAnswer) {
-            console.log("Answer selected:", selectedAnswer, "Correct:", correctAnswer);
-            
             if (selectedAnswer === correctAnswer) {
                 score++;
                 correctAnswers++;
@@ -202,7 +227,7 @@
                     correctAnswers = 0;
                 }
                 if (score >= level * 5) {
-                    level = Math.min(level + 1, 10);
+                    level = Math.min(level + 1, gameConfig[difficulty].maxLevel);
                 }
             } else {
                 lives--;
@@ -217,7 +242,7 @@
         }
 
         function startTimer() {
-            timeLeft = 10;
+            timeLeft = gameConfig[difficulty].timeLimit;
             clearInterval(timer);
             timer = setInterval(() => {
                 timeLeft--;
@@ -242,6 +267,7 @@
                 gameDiv.innerHTML = `
                     <div class="game-over">
                         <h2>Game Over!</h2>
+                        <p>Great job, ${playerName}!</p>
                         <p>Final Score: ${score}</p>
                         <p>Level Reached: ${level}</p>
                         <button class="button" onclick="restartGame()">Play Again</button>
@@ -251,7 +277,7 @@
             }
 
             gameDiv.innerHTML = `
-                <div class="header">Alice's Math Adventure v3 [+,-,×,²,÷,√]</div>
+                <div class="header">${playerName}'s Math Adventure ${gameConfig[difficulty].operations}</div>
                 <div class="stats">
                     <span>Level: ${level}</span>
                     <span>Score: ${score}</span>
@@ -281,7 +307,7 @@
             score = 0;
             level = 1;
             lives = 6;
-            timeLeft = 10;
+            timeLeft = gameConfig[difficulty].timeLimit;
             correctAnswers = 0;
             gameOver = false;
             wrongQuestions = [];
