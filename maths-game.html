@@ -64,6 +64,20 @@
             font-size: 24px;
             margin: 0 2px;
         }
+        .wrong-questions {
+            margin-top: 20px;
+            text-align: left;
+        }
+        .wrong-questions h3 {
+            color: #ec4899;
+            margin-bottom: 10px;
+        }
+        .wrong-question-item {
+            margin: 5px 0;
+            padding: 5px;
+            background: rgba(236, 72, 153, 0.1);
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
@@ -112,6 +126,8 @@
         let wrongQuestions = [];
 
         function generateQuestion() {
+            console.log("Generating new question");
+            
             const config = gameConfig[difficulty];
             const type = config.types[Math.floor(Math.random() * config.types.length)];
             const maxNumber = Math.min(config.maxNumber, level + 2);
@@ -170,6 +186,8 @@
                     break;
             }
 
+            console.log("Question details:", { type, num1, num2, correctAnswer, multiplyBy10 });
+
             // Generate wrong answers
             const scale = correctAnswer > 50 ? 10 : 3;
             const generateWrongAnswer = () => {
@@ -218,7 +236,9 @@
             }
         }
 
-        function handleAnswer(selectedAnswer, correctAnswer) {
+        function handleAnswer(selectedAnswer, correctAnswer, question) {
+            console.log("Answer selected:", selectedAnswer, "Correct:", correctAnswer);
+            
             if (selectedAnswer === correctAnswer) {
                 score++;
                 correctAnswers++;
@@ -232,6 +252,13 @@
             } else {
                 lives--;
                 correctAnswers = 0;
+                // Store wrong question
+                const questionText = document.querySelector('.question').textContent;
+                wrongQuestions.push({
+                    question: questionText,
+                    yourAnswer: selectedAnswer,
+                    correctAnswer: correctAnswer
+                });
                 if (lives === 0) {
                     gameOver = true;
                 }
@@ -270,6 +297,18 @@
                         <p>Great job, ${playerName}!</p>
                         <p>Final Score: ${score}</p>
                         <p>Level Reached: ${level}</p>
+                        ${wrongQuestions.length > 0 ? `
+                            <div class="wrong-questions">
+                                <h3>Questions to Practice:</h3>
+                                ${wrongQuestions.map(q => `
+                                    <div class="wrong-question-item">
+                                        ${q.question} 
+                                        Your answer: ${q.yourAnswer}, 
+                                        Correct: ${q.correctAnswer}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : ''}
                         <button class="button" onclick="restartGame()">Play Again</button>
                     </div>
                 `;
