@@ -8,7 +8,7 @@
 # Default port for local server (override with make PORT=...)
 PORT ?= 8000
 
-.PHONY: help serve open extract lint
+.PHONY: help serve open extract lint build
 
 help:
 	@echo "Usage:"
@@ -16,6 +16,7 @@ help:
 	@echo "  make open          Open the site in the default browser"
 	@echo "  make PORT=<port>   Specify a custom port (default: $(PORT))"
 	@echo "  make extract       Combine all generator code into GENERATORS.md"
+	@echo "  make build         Build static site into dist/"
 	@echo "  make lint          Run ESLint to statically check JS modules"
 
 serve:
@@ -43,3 +44,15 @@ lint:
 	fi
 	@echo "Running ESLint across JS files..."
 	@npm run lint
+  
+##
+# Build static site into dist/
+##
+.PHONY: build
+build:
+	@echo "Building static site into dist/"
+	@rm -rf dist
+	@mkdir -p dist
+	@cp maths_quest.html dist/index.html
+	@cp -r css dist
+	@cp -r js dist
