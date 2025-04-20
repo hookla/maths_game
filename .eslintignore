@@ -1,0 +1,8 @@
+node_modules/
+css/
+*.html
+*.md
+*.sh
+*.py
+Makefile
+GENERATORS.md

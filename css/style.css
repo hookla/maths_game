@@ -1,0 +1,279 @@
+/* Styles for 11+ Maths Quest */
+        /* Basic Reset & Body Styling */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f0f4f8;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        /* Game Container */
+        #game-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px; /* Max width for larger screens */
+            text-align: center;
+        }
+
+        /* Header Info */
+        #header-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9em;
+            flex-wrap: wrap; /* Allow wrapping on small screens */
+        }
+
+        #header-info span {
+            margin: 5px 10px; /* Spacing for wrapped items */
+            white-space: nowrap; /* Prevent text breaking weirdly */
+        }
+
+        #score-info { font-weight: bold; color: #27ae60; }
+        #level-info { font-weight: bold; color: #2980b9; }
+        #lifeline-info { font-weight: bold; color: #e67e22; }
+        #robux-info { font-weight: bold; color: #8e44ad; font-size: 0.9em;} /* Robux display */
+
+
+        /* Progress Bar */
+        #progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            height: 10px;
+            overflow: hidden;
+        }
+
+        #progress-bar {
+            height: 100%;
+            width: 0%; /* Starts empty */
+            background-color: #3498db;
+            border-radius: 5px;
+            transition: width 0.3s ease-in-out;
+        }
+        #progress-text {
+             font-size: 0.8em;
+             color: #555;
+             margin-top: -18px; /* Position over the bar slightly */
+             margin-bottom: 10px;
+             text-align: right;
+             padding-right: 5px;
+        }
+
+
+        /* Question Area */
+        #question-area {
+            margin-bottom: 25px;
+        }
+
+        #question-text {
+            font-size: 1.2em; /* Larger font for question */
+            margin-bottom: 20px;
+            color: #2c3e50;
+            min-height: 50px; /* Ensure space even for short questions */
+        }
+
+        /* Answer Buttons */
+        #answer-buttons {
+            display: grid;
+            grid-template-columns: 1fr; /* Single column layout */
+            gap: 10px;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 1em;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            text-align: left; /* Align text to left */
+        }
+        .btn:hover:not(:disabled) {
+            background-color: #2980b9;
+        }
+        .btn:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+        .btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .btn.correct {
+            background-color: #2ecc71; /* Green for correct */
+        }
+        .btn.incorrect {
+            background-color: #e74c3c; /* Red for incorrect */
+            opacity: 0.6;
+        }
+        .btn.hidden-lifeline {
+             background-color: #95a5a6; /* Grey out for lifeline */
+             opacity: 0.5;
+             pointer-events: none; /* Make unclickable */
+        }
+
+        /* Feedback Area */
+        #feedback-area {
+            margin-top: 15px;
+            font-weight: bold;
+            min-height: 25px; /* Reserve space */
+        }
+        .feedback-correct { color: #27ae60; }
+        .feedback-incorrect { color: #e74c3c; }
+
+        /* Lifeline Button */
+        #lifeline-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #f39c12;
+            color: white;
+            font-size: 0.9em;
+        }
+        #lifeline-button:hover:not(:disabled) {
+            background-color: #e67e22;
+        }
+        #lifeline-button:disabled {
+             background-color: #bdc3c7;
+             cursor: not-allowed;
+             opacity: 0.7;
+        }
+
+        /* Start/End Screen */
+        #start-screen, #end-screen {
+            padding: 30px;
+        }
+         #start-screen h1, #end-screen h1 {
+             margin-bottom: 15px;
+             color: #2c3e50;
+         }
+         #start-screen p, #end-screen p {
+             margin-bottom: 20px;
+         }
+         .start-btn, .restart-btn {
+            padding: 15px 30px;
+            font-size: 1.1em;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+         }
+         .start-btn:hover, .restart-btn:hover {
+             background-color: #27ae60;
+         }
+
+        /* End Screen Specifics */
+        #end-screen ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 20px;
+            text-align: left; /* Align list items left */
+            max-width: 350px; /* Control width of list */
+            margin-left: auto;
+            margin-right: auto;
+        }
+        #end-screen ul li {
+            background-color: #ecf0f1;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            border-left: 4px solid #3498db;
+        }
+         #end-screen ul li strong {
+             color: #2980b9;
+         }
+        #performance-summary {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #fdf5e6; /* Light orange background */
+            border: 1px solid #f39c12;
+            border-radius: 5px;
+            text-align: left;
+        }
+         #performance-summary h3 {
+             margin-bottom: 5px;
+             color: #d35400;
+         }
+         #robux-disclaimer {
+             font-size: 0.8em;
+             color: #c0392b; /* Red color for emphasis */
+             margin-top: 15px;
+             font-weight: bold;
+             text-align: center;
+             padding: 10px;
+             background-color: #fdecea;
+             border: 1px dashed #c0392b;
+             border-radius: 4px;
+         }
+
+        /* Version Number */
+        #version-info {
+            position: fixed;
+            bottom: 5px;
+            right: 10px;
+            font-size: 0.7em;
+            color: #7f8c8d;
+        }
+
+        /* Utility Class */
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive Adjustments for smaller screens */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            #game-container {
+                padding: 15px;
+            }
+            #header-info {
+                font-size: 0.8em; /* Slightly smaller text */
+                margin-bottom: 15px;
+            }
+             #header-info span {
+                margin: 3px 5px; /* Reduce spacing */
+            }
+            #question-text {
+                font-size: 1.1em; /* Adjust question font size */
+            }
+            .btn {
+                padding: 10px 12px; /* Adjust button padding */
+                font-size: 0.95em;
+            }
+            #lifeline-button {
+                padding: 8px 15px;
+            }
+            .start-btn, .restart-btn {
+                padding: 12px 25px;
+                font-size: 1em;
+            }
+             #end-screen ul li {
+                 padding: 6px 10px;
+             }
+        }

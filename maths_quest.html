@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>11+ Maths Quest</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div id="game-container">
+        <div id="start-screen">
+            <h1>11+ Maths Quest</h1>
+             <p>Ready to test your maths skills? Answer <strong>25 auto-generated questions</strong> to practice for the 11+ exam. Questions cover various topics and increase in difficulty. Good luck!</p>
+             <p><em>Note: Question generation focuses on core numerical topics.</em></p>
+            <button class="start-btn" onclick="startGame()">Start Game</button>
+             <div id="robux-disclaimer" style="margin-top: 30px;">
+                 <strong>Please Note:</strong> The 'Virtual Robux Goal' shown during the game is just for fun and motivation! It does <strong>NOT</strong> award real Robux or any other real currency or item.
+             </div>
+        </div>
+
+        <div id="game-area" class="hidden">
+            <div id="header-info">
+                <span id="level-info">Level: 1</span>
+                <span id="score-info">Score: 0</span>
+                <span id="lifeline-info">Lifelines: 💎 x 5</span>
+                <span id="robux-info">Virtual Robux Goal: 0 / 100</span>
+            </div>
+
+            <div id="progress-container">
+                <div id="progress-bar"></div>
+                 <div id="progress-text">0 / 5</div>
+            </div>
+
+
+            <div id="question-area">
+                <div id="question-text">Generating question...</div>
+                <div id="answer-buttons">
+                    </div>
+            </div>
+
+            <div id="feedback-area"></div>
+
+            <button id="lifeline-button" class="btn" onclick="useLifeline()">Use Lifeline (Get a Clue)</button>
+        </div>
+
+        <div id="end-screen" class="hidden">
+            <h1>Session Complete!</h1>
+            <p>Here's how you did:</p>
+            <ul>
+                <li id="final-score"><strong>Final Score:</strong> <span></span></li>
+                <li id="final-robux"><strong>Virtual Robux Earned:</strong> <span></span></li>
+                <li id="final-level"><strong>Highest Level Reached:</strong> <span></span></li>
+                <li id="completion-time"><strong>Completed On:</strong> <span></span></li>
+            </ul>
+            <div id="performance-summary">
+                <h3>Areas to Practice:</h3>
+                <p id="performance-details">Keep practicing all areas!</p>
+            </div>
+            <div id="robux-disclaimer">
+                 <strong>Reminder:</strong> The 'Virtual Robux Goal' is for fun and motivation! Talk to Laurence about getting Robux
+             </div>
+            <button class="restart-btn" onclick="restartGame()" style="margin-top: 20px;">Play Again?</button>
+        </div>
+
+    </div>
+
+    <div id="version-info">v1.1.0-AutoGen</div>
+
+
+
+    <script type="module" src="js/main.js"></script>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "11plus-maths-quest",
+  "version": "1.0.0",
+  "description": "11+ Maths Quest static site",
+  "scripts": {
+    "serve": "make serve",
+    "lint": "eslint js --ext .js"
+  },
+  "devDependencies": {
+    "eslint": "^8.0.0",
+    "eslint-plugin-import": "^2.31.0"
+  }
+}
