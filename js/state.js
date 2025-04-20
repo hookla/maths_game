@@ -7,8 +7,19 @@ export const settings = {
     robuxTarget: 100
 };
 
-export function initGameState() {
-    gameState.currentLevel = 1;
+/**
+ * Initialize the game state.
+ * @param {number} [startingLevel=1] - The level to start the game at.
+ */
+/**
+ * Initialize the game state.
+ * @param {number} [startingLevel=1] - The level to start the game at.
+ * @param {string} [subject='maths'] - The test subject: 'maths' or 'english'.
+ */
+export function initGameState(startingLevel = 1, subject = 'maths') {
+    // Record chosen subject and starting level
+    gameState.subject = subject;
+    gameState.currentLevel = startingLevel;
     gameState.score = 0;
     gameState.lifelines = settings.initialLifelines;
     gameState.correctInLevelCounter = 0;

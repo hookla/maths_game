@@ -1,5 +1,7 @@
+/* global confetti */
 import { gameState, settings, initGameState } from './state.js';
-import { generateQuestion } from './generators/index.js';
+import { generateQuestion as generateMathQuestion } from './generators/index.js';
+import { generateQuestion as generateEnglishQuestion } from './generators/english/index.js';
 import { shuffleArray } from './helpers.js';
 
 // DOM elements
@@ -16,6 +18,8 @@ const questionText = document.getElementById('question-text');
 const answerButtonsContainer = document.getElementById('answer-buttons');
 const feedbackArea = document.getElementById('feedback-area');
 const lifelineButton = document.getElementById('lifeline-button');
+// Element to show the topic/type of the current question
+const topicInfo = document.getElementById('topic-info');
 const finalScoreEl = document.querySelector('#final-score span');
 const finalRobuxEl = document.querySelector('#final-robux span');
 const finalLevelEl = document.querySelector('#final-level span');
@@ -23,7 +27,19 @@ const completionTimeEl = document.querySelector('#completion-time span');
 const performanceDetailsEl = document.getElementById('performance-details');
 
 export function startGame() {
-    initGameState();
+    // Determine starting subject and level from user selections
+    let startingLevel = 1;
+    const levelSelect = document.getElementById('starting-level');
+    if (levelSelect) {
+        const val = parseInt(levelSelect.value, 10);
+        if (!isNaN(val)) startingLevel = Math.min(Math.max(val, 1), 5);
+    }
+    let subject = 'maths';
+    const subjSelect = document.getElementById('subject-select');
+    if (subjSelect && subjSelect.value === 'english') {
+        subject = 'english';
+    }
+    initGameState(startingLevel, subject);
     startScreen.classList.add('hidden');
     endScreen.classList.add('hidden');
     gameArea.classList.remove('hidden');
@@ -42,10 +58,20 @@ function loadNextQuestion() {
         showEndScreen();
         return;
     }
-    gameState.currentQuestion = generateQuestion(gameState.currentLevel);
+    // Generate next question based on selected subject
+    if (gameState.subject === 'english') {
+        gameState.currentQuestion = generateEnglishQuestion(gameState.currentLevel);
+    } else {
+        gameState.currentQuestion = generateMathQuestion(gameState.currentLevel);
+    }
     let attempts = 0;
     while (gameState.askedQuestionSignatures.has(gameState.currentQuestion.text) && attempts < 10) {
-        gameState.currentQuestion = generateQuestion(gameState.currentLevel);
+        // Regenerate using the selected subject generator
+        if (gameState.subject === 'english') {
+            gameState.currentQuestion = generateEnglishQuestion(gameState.currentLevel);
+        } else {
+            gameState.currentQuestion = generateMathQuestion(gameState.currentLevel);
+        }
         attempts++;
     }
     gameState.askedQuestionSignatures.add(gameState.currentQuestion.text);
@@ -70,6 +96,10 @@ export function displayQuestion(question) {
         answerButtonsContainer.appendChild(btn);
     });
     lifelineButton.disabled = gameState.lifelines <= 0;
+    // Display the question type/topic below the choices
+    if (topicInfo) {
+        topicInfo.textContent = `Type: ${question.topic}`;
+    }
 }
 
 export function handleAnswerSelection(selectedKey) {
@@ -110,8 +140,18 @@ function findButtonByKey(key) {
 function levelUp() {
     gameState.currentLevel = Math.min(gameState.currentLevel + 1, 5);
     gameState.correctInLevelCounter = 0;
+    // Show level-up message
     feedbackArea.textContent = "Level Up!";
     feedbackArea.className = 'feedback-correct';
+    // Confetti celebration (requires canvas-confetti)
+    if (typeof confetti === 'function') {
+        // Confetti burst from bottom center
+        confetti({
+            particleCount: 80,
+            spread: 60,
+            origin: { x: 0.5, y: 1 }
+        });
+    }
 }
 
 export function useLifeline() {

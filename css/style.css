@@ -53,12 +53,14 @@
 
 
         /* Progress Bar */
+        /* Progress Bar container: thicker for readability */
         #progress-container {
             width: 100%;
             background-color: #e0e0e0;
             border-radius: 5px;
             margin-bottom: 20px;
-            height: 10px;
+            height: 30px;           /* increased height */
+            position: relative;      /* for absolute positioning of text */
             overflow: hidden;
         }
 
@@ -69,19 +71,32 @@
             border-radius: 5px;
             transition: width 0.3s ease-in-out;
         }
+        /* Progress text: centered within bar */
         #progress-text {
-             font-size: 0.8em;
-             color: #555;
-             margin-top: -18px; /* Position over the bar slightly */
-             margin-bottom: 10px;
-             text-align: right;
-             padding-right: 5px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            margin: 0;
+            padding: 0;
+            font-size: 1em;
+            font-weight: bold;
+            color: #fff;          /* white for contrast */
+            z-index: 1;
+            pointer-events: none;
         }
 
 
         /* Question Area */
         #question-area {
             margin-bottom: 25px;
+        }
+        /* Topic info: shows type of current question below choices */
+        .topic-info {
+            font-size: 0.9em;
+            color: #555;
+            margin-top: 8px;
+            font-style: italic;
         }
 
         #question-text {

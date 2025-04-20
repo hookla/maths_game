@@ -17,6 +17,7 @@ import { generateMeasurementProblem } from './measurement.js';
 import { generateGeometryProblem } from './geometry.js';
 import { generateDataProblem } from './data.js';
 import { generateProbabilityProblem } from './probability.js';
+import { generateStatsInterpretationProblem } from './statisticsInterpretation.js';
 import { generateSpeedProblem } from './speed.js';
 
 export function generateQuestion(level) {
@@ -24,7 +25,7 @@ export function generateQuestion(level) {
     1: ['Addition', 'Subtraction', 'Simple Multiply', 'Place Value', 'Rounding', 'Negative Numbers', 'Multiply/Divide by 10/100/1000'],
     2: ['Addition', 'Subtraction', 'Multiply', 'Division', 'Simple Fractions', 'Sequences', 'Place Value', 'Rounding', 'Negative Numbers', 'Order of Operations'],
     3: ['Multiply', 'Division', 'Fractions', 'Percentages', 'Sequences', 'Simple Algebra', 'Number Properties', 'Fraction Operations', 'Conversions'],
-    4: ['Fractions', 'Percentages', 'Ratio', 'Algebra', 'Problem Solving (Numerical)', 'Measurement', 'Unit Conversion', 'HCF/LCM'],
+    4: ['Fractions', 'Percentages', 'Ratio', 'Algebra', 'Problem Solving (Numerical)', 'Measurement', 'Unit Conversion', 'HCF/LCM', 'Statistics Interpretation'],
     5: ['Percentages', 'Ratio', 'Algebra', 'Multi-Step Problem', 'Geometry', 'Statistics', 'Probability', 'Speed/Distance/Time']
     };
     const available = topicsPerLevel[level] || topicsPerLevel[5];
@@ -55,6 +56,7 @@ export function generateQuestion(level) {
             case 'Unit Conversion': data = generateMeasurementProblem(level); topic = 'Unit Conversion'; break;
             case 'HCF/LCM': data = generateNumberPropertiesProblem(level); topic = 'HCF/LCM'; break;
             case 'Geometry': data = generateGeometryProblem(level); break;
+            case 'Statistics Interpretation': data = generateStatsInterpretationProblem(level); break;
             case 'Statistics': data = generateDataProblem(level); break;
             case 'Probability': data = generateProbabilityProblem(level); break;
             case 'Speed/Distance/Time': data = generateSpeedProblem(level); topic = 'Speed/Distance/Time'; break;

@@ -13,6 +13,25 @@
             <h1>11+ Maths Quest</h1>
              <p>Ready to test your maths skills? Answer <strong>25 auto-generated questions</strong> to practice for the 11+ exam. Questions cover various topics and increase in difficulty. Good luck!</p>
              <p><em>Note: Question generation focuses on core numerical topics.</em></p>
+            <!-- Option to select subject (Maths or English) -->
+            <p>
+                <label for="subject-select">Select Subject:</label>
+                <select id="subject-select">
+                    <option value="maths">Maths</option>
+                    <option value="english">English</option>
+                </select>
+            </p>
+            <!-- Option to select starting level -->
+            <p>
+                <label for="starting-level">Starting Level:</label>
+                <select id="starting-level">
+                    <option value="1">Level 1</option>
+                    <option value="2">Level 2</option>
+                    <option value="3">Level 3</option>
+                    <option value="4">Level 4</option>
+                    <option value="5">Level 5</option>
+                </select>
+            </p>
             <button class="start-btn" onclick="startGame()">Start Game</button>
              <div id="robux-disclaimer" style="margin-top: 30px;">
                  <strong>Please Note:</strong> The 'Virtual Robux Goal' shown during the game is just for fun and motivation! It does <strong>NOT</strong> award real Robux or any other real currency or item.
@@ -35,8 +54,9 @@
 
             <div id="question-area">
                 <div id="question-text">Generating question...</div>
-                <div id="answer-buttons">
-                    </div>
+                <div id="answer-buttons"></div>
+                <!-- Display the current question topic/type -->
+                <div id="topic-info" class="topic-info"></div>
             </div>
 
             <div id="feedback-area"></div>
@@ -69,6 +89,8 @@
 
 
 
+    <!-- Confetti library for level-up celebrations -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script type="module" src="js/main.js"></script>
 
 
